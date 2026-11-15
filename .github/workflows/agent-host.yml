@@ -1,0 +1,142 @@
+name: agent-host
+
+# Hosts the Proof Gatekeeper agent on a runner behind a Cloudflare quick
+# tunnel. The public URL + agent log are published to the `agent-state`
+# branch so the operator can register/update the platform endpoint.
+# Optionally chains a follow-up run (round = 10h > 6h job limit).
+
+on:
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "How long to keep the agent up (<=350)"
+        required: true
+        default: "60"
+      phase:
+        description: "Phase label (bootstrap, live, round-a, round-b)"
+        required: true
+        default: "live"
+      chain_minutes:
+        description: "If >0, dispatch a follow-up run of this many minutes near the end"
+        required: true
+        default: "0"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - name: Checkout agent code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install deps and stage circuit artifacts
+        run: |
+          npm install --no-audit --no-fund
+          cp circuits/gatekeeper.wasm circuits/gatekeeper_final.zkey .
+
+      - name: Start agent
+        env:
+          AGENT_GAMES_HMAC_SECRET: ${{ secrets.AGENT_GAMES_HMAC_SECRET }}
+          AGENT_SALT_KEY: ${{ secrets.AGENT_SALT_KEY }}
+        run: |
+          printf '%s' "$AGENT_SALT_KEY" > salt-key.txt
+          chmod 600 salt-key.txt
+          PORT=8787 AGENT_GAMES_HMAC_SECRET="$AGENT_GAMES_HMAC_SECRET" \
+            nohup node agent.mjs > agent.log 2>&1 &
+          echo "agent pid $!"
+          for i in $(seq 1 20); do
+            sleep 2
+            if curl -s -m 3 http://127.0.0.1:8787/health; then echo; break; fi
+          done
+          curl -s -m 3 http://127.0.0.1:8787/health || (tail -30 agent.log; exit 1)
+
+      - name: Start quick tunnel
+        run: |
+          curl -sL -o cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared
+          nohup ./cloudflared tunnel --url http://127.0.0.1:8787 --no-autoupdate > cf.log 2>&1 &
+          URL=""
+          for i in $(seq 1 45); do
+            sleep 2
+            URL=$(grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' cf.log | head -1 || true)
+            [ -n "$URL" ] && break
+          done
+          if [ -z "$URL" ]; then tail -30 cf.log; exit 1; fi
+          echo "TUNNEL_URL=$URL" >> "$GITHUB_ENV"
+          echo "tunnel: $URL"
+          curl -s -m 10 "$URL/health" || true
+
+      - name: Publish URL + logs to agent-state branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          publish() {
+            rm -rf statepub && mkdir statepub && cd statepub
+            git init -q -b agent-state
+            git config user.name "agent-host"
+            git config user.email "agent-host@localhost"
+            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git fetch -q --depth 1 origin agent-state || true
+            git checkout -q -B agent-state FETCH_HEAD 2>/dev/null || git checkout -q --orphan agent-state
+            printf '%s\n' "$TUNNEL_URL" > url.txt
+            printf 'phase=%s\nrun=%s\nupdated=%s\n' "${{ inputs.phase }}" "$GITHUB_RUN_ID" "$(date -u +%FT%TZ)" > meta.txt
+            tail -c 60000 ../agent.log > log.txt 2>/dev/null || echo "no log yet" > log.txt
+            git add url.txt meta.txt log.txt
+            git commit -q -m "state ${{ inputs.phase }} run $GITHUB_RUN_ID $(date -u +%FT%TZ)" || exit 0
+            git push -q origin agent-state || git push -q --force origin agent-state
+            cd ..
+          }
+          publish
+          echo "$TUNNEL_URL" > /tmp/tunnel_url.txt
+
+      - name: Keep alive (publish log periodically, chain next run)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TOTAL=${{ inputs.minutes }}
+          CHAIN=${{ inputs.chain_minutes }}
+          ELAPSED=0
+          CHAINED=0
+          publish_log() {
+            rm -rf statepub && mkdir statepub && cd statepub
+            git init -q -b agent-state
+            git config user.name "agent-host"
+            git config user.email "agent-host@localhost"
+            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git fetch -q --depth 1 origin agent-state || true
+            git checkout -q -B agent-state FETCH_HEAD 2>/dev/null || exit 0
+            tail -c 60000 ../agent.log > log.txt 2>/dev/null || true
+            printf 'phase=%s\nrun=%s\nupdated=%s\n' "${{ inputs.phase }}" "$GITHUB_RUN_ID" "$(date -u +%FT%TZ)" > meta.txt
+            git add log.txt meta.txt
+            git commit -q -m "log $(date -u +%FT%TZ)" || { cd ..; return 0; }
+            git push -q origin agent-state || true
+            cd ..
+          }
+          while [ "$ELAPSED" -lt "$TOTAL" ]; do
+            sleep 120
+            ELAPSED=$((ELAPSED+2))
+            publish_log || true
+            REMAIN=$((TOTAL-ELAPSED))
+            if [ "$CHAIN" -gt 0 ] && [ "$CHAINED" -eq 0 ] && [ "$REMAIN" -le 20 ]; then
+              NEXT_PHASE="round-b"
+              [ "${{ inputs.phase }}" = "round-b" ] && NEXT_PHASE="round-c"
+              curl -s -X POST \
+                -H "Authorization: Bearer ${GH_TOKEN}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/agent-host.yml/dispatches" \
+                -d "{\"ref\":\"main\",\"inputs\":{\"minutes\":\"$CHAIN\",\"phase\":\"$NEXT_PHASE\",\"chain_minutes\":\"0\"}}"
+              CHAINED=1
+              echo "chained follow-up run: $NEXT_PHASE for $CHAIN min"
+            fi
+          done
+          publish_log || true
+          echo "done after ${TOTAL} min"
