@@ -1,7 +1,1 @@
-{"t":"2026-11-15T09:01:39.582Z","ev":"listening","port":8787,"secretSet":true}
-{"t":"2026-11-15T09:04:10.832Z","ev":"bad_signature","len":171}
-{"t":"2026-11-15T09:04:13.967Z","ev":"bad_signature","len":171}
-{"t":"2026-11-15T09:04:17.665Z","ev":"bad_signature","len":171}
-{"t":"2026-11-15T09:08:46.833Z","ev":"bad_signature","len":171}
-{"t":"2026-11-15T09:09:04.957Z","ev":"bad_signature","len":171}
-{"t":"2026-11-15T09:09:17.094Z","ev":"bad_signature","len":171}
+{"t":"2026-11-15T14:37:41.031Z","ev":"listening","port":8787,"secretSet":true}
