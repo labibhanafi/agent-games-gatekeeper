@@ -1,0 +1,5 @@
+node_modules/
+salt-key.txt
+state.json
+agent.log
+*.env
