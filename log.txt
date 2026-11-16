@@ -53,3 +53,6 @@
 {"t":"2026-11-16T17:31:42.211Z","ev":"task","taskId":"task_R04_4edee720-2ca1-7d4d-8a4c-f98bb2c913c3","mode":"competition","decision":"APPROVE","reason":"VALID_CONDITION","proved":true,"ms":151}
 {"t":"2026-11-16T17:31:44.412Z","ev":"task_retry_cached","taskId":"task_R04_4edee720-2ca1-7d4d-8a4c-f98bb2c913c3","mode":"competition"}
 {"t":"2026-11-16T17:31:48.552Z","ev":"task_retry_cached","taskId":"task_R04_4edee720-2ca1-7d4d-8a4c-f98bb2c913c3","mode":"competition"}
+{"t":"2026-11-16T17:32:38.182Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-16T17:32:40.943Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-16T17:32:45.067Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
