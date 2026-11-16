@@ -4,3 +4,7 @@
 {"t":"2026-11-16T16:12:30.819Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-16T16:12:34.403Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-16T16:12:46.869Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-16T16:17:22.146Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-16T16:17:32.744Z","ev":"task","taskId":"task_R04_2114d8c1-29a3-bc8e-cc6c-630fb53f8004","mode":"competition","decision":"REJECT","reason":"AMOUNT_OVERFLOW","proved":true,"ms":540}
+{"t":"2026-11-16T16:17:37.766Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-16T16:17:50.881Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
