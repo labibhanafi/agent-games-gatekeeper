@@ -133,3 +133,6 @@
 {"t":"2026-11-19T13:45:41.492Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-19T13:45:50.341Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-19T13:46:19.826Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-19T13:49:14.099Z","ev":"task","taskId":"task_R07_436855fd-d1e0-7a2d-3c06-5a24f8ee3433","mode":"competition","decision":"APPROVE","reason":"VALID_CONDITION","proved":true,"ms":121}
+{"t":"2026-11-19T13:50:55.767Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-19T13:51:00.752Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
