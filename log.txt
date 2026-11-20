@@ -4,3 +4,4 @@
 {"t":"2026-11-20T16:13:52.475Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-20T16:13:58.770Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-20T16:14:15.974Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-20T16:17:33.425Z","ev":"task","taskId":"task_R08_857e2662-40a4-247c-2fa1-d24560616ce6","mode":"competition","decision":"REJECT","reason":"AMOUNT_OVERFLOW","proved":true,"ms":323}
