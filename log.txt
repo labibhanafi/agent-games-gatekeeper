@@ -57,3 +57,6 @@
 {"t":"2026-11-20T17:38:59.731Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-20T17:39:07.103Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-20T17:39:30.332Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-20T17:44:04.402Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-20T17:44:06.616Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-20T17:44:14.185Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
