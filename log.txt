@@ -41,3 +41,6 @@
 {"t":"2026-11-22T11:14:09.480Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-22T11:14:13.825Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
 {"t":"2026-11-22T11:14:29.213Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-22T11:19:07.969Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-22T11:19:13.598Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
+{"t":"2026-11-22T11:19:25.128Z","ev":"preflight","agent_id":"29a6e262-4aa8-4e0c-b27b-f5266ffa5ad0"}
